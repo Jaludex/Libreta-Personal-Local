@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro De Tareas</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</head>
+<body class="bg-info">
+    <!-- Crear lista de tareas almacenable en local con, titulo, fecha, status. Marcables como completadas con un check -->
+    <!-- La parte del check me tome la libertad de cambiarla por un boton, ya que si meto notas necesito preguntarla antes de decir que fue entregada, si es por ver si sabemos manejar checks, desde actividades pasadas muestro que se usarlas -->
+    <!-- Tomare la misma estetica que he seguido ultimamente, pero variare colo de fondo -->
+    <!-- Tambien le agregaria un boton para borrar todo, y tal vez para editar la tarea ya subida, pero con lo que tengo ya estoy contento -->
+
+    <div class="modal fade" id="modalUniversal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modalLabel">
+
+            </h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="modalBody">
+            ...
+          </div>
+          <div class="modal-footer" id="modalFooter">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="w-50 bg-light mt-5 mx-auto p-3 rounded-3 shadow">
+        <div class="text-center mb-3">
+            <h2>Libreta Personal v1</h2>
+            <h6>por Jesus Leon</h6>
+        </div>
+
+        <div class="accordion" id="acordeon">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Registrar Un Proyecto
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#acordeon">
+              <div class="accordion-body">
+
+                <form class="d-flex flex-wrap justify-content-evenly" id="registro" name="registroForm">
+                  <div class="mb-3 w-50 px-3">
+                    <label for="titulo" class="form-label">Actividad</label>
+                    <input type="text"
+                      class="form-control" id="titulo" aria-describedby="helpId" placeholder="Algo Interesante y Corto" required>
+                      <small id="helpId" class="form-text text-muted">¿Que te mandaron a hacer?</small>
+                  </div>
+                  <div class="mb-3 w-50 px-3">
+                    <label for="fecha" class="form-label">Fecha</label>
+                    <input type="date"
+                      class="form-control" id="fecha" aria-describedby="helpId" required>
+                    <small id="helpId" class="form-text text-muted">¿Para cuando te la pidieron?</small>
+                  </div>
+                  <div class="mb-3 w-75 mx-1">
+                    <label for="descripcion" class="form-label">Descripcion</label>
+                    <textarea class="form-control" id="descripcion" rows="3"></textarea>
+                    <small id="helpId" class="form-text text-muted">¿Que te pidieron Especificamente? *opcional</small>
+                  </div>
+                  <div class="mb-3 w-25">
+                      <label for="dificultad" class="form-label">Dificultad</label>
+                      <select class="form-select" id="dificultad">
+                          <option value="easy">Facil</option>
+                          <option value="medium" selected>Media</option>
+                          <option value="hard">Dificil</option>
+                          <option value="rHard">Abuso al Estudiante</option>
+                      </select>
+                      <small id="helpId" class="form-text text-muted">¿Esta Arrecha?</small>
+                  </div>
+                  <div class="mb-3 w-25">
+                      <label for="status" class="form-label">Status</label>
+                      <select class="form-select" id="status" onchange="alternarStatus(this.value)">
+                          <option value="0">Pendiente</option>
+                          <option value="1">Entregada</option> 
+                          <!-- Si la tarea que registraste ya esta terminada al momento, te preguntara de una vez la nota que sacaste -->
+                      </select>
+                      <small id="helpId" class="form-text text-muted">¿Ya la hiciste?</small>
+                  </div>
+                  <div class="mb-3 w-25">
+                    <label for="nota" class="form-label">Nota</label>
+                    <input type="number"
+                      class="form-control" id="nota" aria-describedby="helpId" placeholder="01-20" min="1" max="20" disabled>
+                    <small id="helpId" class="form-text text-muted">¿Como saliste?</small>
+                  </div>
+                  <label class="w-100 text-center"><h5>Icono:</h5></label>
+                  <div class="mb-3 w-100 d-flex justify-content-center gap-5 text-primary">
+                    <input type="radio" class="btn-check" name="opcionesLogo" id="option5" autocomplete="off" value="bi-pencil-fill">
+                    <label class="btn btn-lg" for="option5"><i class="bi bi-pencil-fill"></i></label>
+                    
+                    <input type="radio" class="btn-check" name="opcionesLogo" id="option6" autocomplete="off" value="bi-book-half" checked>
+                    <label class="btn btn-lg" for="option6"><i class="bi bi-book-half"></i></label>
+                    
+                    <input type="radio" class="btn-check" name="opcionesLogo" id="option8" autocomplete="off" value="bi-clipboard2-fill">
+                    <label class="btn btn-lg" for="option8"><i class="bi bi-clipboard2-fill"></i></label>
+
+                    <input type="radio" class="btn-check" name="opcionesLogo" id="option9" autocomplete="off" value="bi-lightbulb-fill">
+                    <label class="btn btn-lg" for="option9"><i class="bi bi-lightbulb-fill"></i></label>
+
+                    <input type="radio" class="btn-check" name="opcionesLogo" id="option10" autocomplete="off" value="bi-gear-fill">
+                    <label class="btn btn-lg" for="option10"><i class="bi bi-gear-fill"></i></label>
+                  </div>
+                  <button type="submit" class="btn btn-primary w-50 py-2 fs-4">Anotar en Libreta</button>
+                </form>
+                <div id="zonaSuccess"></div>
+
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Proyectos Pendientes
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#acordeon">
+              <div class="accordion-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <th>Indice</th>
+                      <th>Icono</th>
+                      <th>Nombre</th>
+                      <th>Entrega</th>
+                      <th>Dificultad</th>
+                      <th>Extras</th>
+                    </thead>
+                    <tbody id="cuerpoTablaPendientes">
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Proyectos Entregados
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#acordeon">
+              <div class="accordion-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <th>Indice</th>
+                      <th>Icono</th>
+                      <th>Nombre</th>
+                      <th>Entrega</th>
+                      <th>Dificultad</th>
+                      <th>Extras</th>
+                    </thead>
+                    <tbody id="cuerpoTablaEntregado">
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script>
+      const proyectosEntregados = JSON.parse(localStorage.getItem("saveProyectosEntregados")) || []
+      const proyectosPendientes = JSON.parse(localStorage.getItem("saveProyectosPendientes")) || []
+      //Me enfrente al dilema de colocar las pendientes en el mismo arreglo de las entregadas y darles el valor de status o dejar 2 arreglos diferentes. Opte por manejar 2 arreglos diferentes, para no andar comparandolos a cada rato y ver quien va a la tabla que le corresponde
+      //Tal vez agregue que se ordenen por fecha, de la mas proxima o antigua, a la mas lejana. PDD: Por la hora a lo que estoy terminando esto, lo dejare para despues con tal de priorizar el resto de funciones
+      const alternarStatus = (status) => {
+        if (status == 1) {
+          document.getElementById('nota').disabled = false
+          document.getElementById('nota').required = true
+        }
+        else { // Todo caso donde no sea una tarea entregada, negara el campo de notas
+          document.getElementById('nota').required = false 
+          document.getElementById('nota').disabled = true
+          document.getElementById('nota').value = '' 
+        }
+      }
+
+      const modalBorrar = (objetivo, indice) => { //Aqui advierto al usuario de que esta a punto de borrar un punto importante
+        let arregloActual
+        if (objetivo == 0) {
+          arregloActual = proyectosPendientes
+        }
+        else if (objetivo == 1) {
+          arregloActual = proyectosEntregados
+        }
+        else {
+          alert('No se a quien Borrar')
+        }
+        document.getElementById('modalLabel').innerText = '¿Estas Seguro?'
+        document.getElementById('modalBody').innerHTML = `
+        <div>Borraras:</div>
+        <h2 class="text-break">${(arregloActual[indice].titulo).toUpperCase()}</h2>
+        `
+        document.getElementById('modalFooter').innerHTML = `
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="borrarProyecto(${objetivo}, ${indice})">Borrar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No Borrar</button>
+        `
+      }
+
+      const borrarProyecto = (objetivo, indice) => {
+        if (objetivo == 1) {
+          proyectosEntregados.splice(indice, 1)
+          refrescarTabla(1, proyectosEntregados)
+          if (proyectosEntregados.length == 0) localStorage.removeItem("saveProyectosEntregados")
+
+        }
+        else if (objetivo == 0) {
+          proyectosPendientes.splice(indice, 1)
+          refrescarTabla(0, proyectosPendientes)
+          if (proyectosPendientes.length == 0) localStorage.removeItem("saveProyectosPendientes")
+          
+        }
+        else alert('No se a quien borrar')
+
+      }
+
+      const preguntarNota = (indice) => {
+        refrescarTabla(0, proyectosPendientes) //Colocar este refresco prohibe que puedas colocar mas de un campo de edicion a la vez
+        document.getElementById(`final${indice}-0`).innerHTML = `
+        <form id="editarCampo">
+          <label for="nuevaNota" class="form-label">Nota Entregada:</label>
+          <input type="number"
+            class="form-control" id="nuevaNota" aria-describedby="helpId" placeholder="1-20" min="1" max="20">
+            <input type="hidden" id="indiceEdit" value="${indice}">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-warning" onclick="refrescarTabla(0, proyectosPendientes)"><i class="bi bi-clipboard2-x-fill"></i></button>
+        </form>
+        ` //El hidden me permite llevarme el indice al submit
+
+        document.getElementById('editarCampo').addEventListener('submit', (e) => { //Coloco el event listener aca porque necesito crearlo ya con el formulario hecho, de no ser asi lanza error
+        e.preventDefault()
+        let indiceEdit = document.getElementById('indiceEdit').value
+        proyectosPendientes[indiceEdit].nota = document.getElementById('nuevaNota').value
+        proyectosEntregados.push(proyectosPendientes[indiceEdit])
+        proyectosPendientes.splice(indiceEdit, 1)
+        //Cencillo el cambio de pendiente a entregado, lo toma en pendiente, le adjunta la nota, lo lleva a entregados y lo elimina de pendientes
+        refrescarTabla(0, proyectosPendientes)
+        refrescarTabla(1, proyectosEntregados)
+        //Doble refresco para ver el cambio en ambas partes y que se guarde en el local de ambos
+        if (proyectosPendientes.length == 0) localStorage.removeItem("saveProyectosPendientes")
+      })
+      }
+
+      const refrescarTabla = (objetivo, proyectos) => {
+        let tablaObjetivo
+        if (objetivo == 1) {
+          tablaObjetivo = 'cuerpoTablaEntregado'
+          localStorage.setItem("saveProyectosEntregados", JSON.stringify(proyectosEntregados)) //Aprovecho de una y guardo aqui el local, cada que se refresque
+        }
+        else {
+          tablaObjetivo = 'cuerpoTablaPendientes' 
+          localStorage.setItem("saveProyectosPendientes", JSON.stringify(proyectosPendientes))
+          objetivo = 0 //En todo caso donde la tarea no este entregada, la tira a pendientes, asi me ahorro excepciones
+        }
+        if (proyectos.length == 0) {
+          document.getElementById(tablaObjetivo).innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div class="text-center fs-5">¡No veo <b>Proyectos</b> por esta zona coronel!</div>
+              <div class="text-center"><small>Ve a <a href="#" data-bs-toggle="collapse" data-bs-target="#collapseOne" class="text-decoration-none">Registrar un Proyecto</a> y ponte creativo</small></div>
+            </td>
+          </tr>
+          `
+        }
+        else {
+          let indice = 0
+          document.getElementById(tablaObjetivo).innerHTML = ''
+          for (let proyecto of proyectos) {
+            document.getElementById(tablaObjetivo).innerHTML += `
+            <tr>
+              <td>${indice+1}</td>
+              <td class="text-center"><i class="bi ${proyecto.icono} fs-5 text-primary"></i></td>
+              <td class="w-25 text-break">${(proyecto.titulo).toUpperCase()}</td>
+              <td>${proyecto.fecha}</td>
+              <td id="dificultad${indice}-${objetivo}">Cargando...</td>
+              <td id="final${indice}-${objetivo}" class="d-flex justify-content-evenly align-items-center gap-2">Cargando...</td>
+            </tr>
+            ` //Aqui llamo a varios id por indice y objetivo, porque tengo al editar tengo que distinguirlos bien para que no se sobreescriban
+            switch (proyecto.dificultad) { //El campo de dificultad sera dinamico
+              case 'easy':
+                document.getElementById(`dificultad${indice}-${objetivo}`).innerHTML = `<div><i class="bi bi-circle-fill text-success fs"></i> - Facil</div>`
+                break;
+            
+              case 'medium':
+                document.getElementById(`dificultad${indice}-${objetivo}`).innerHTML = `<div><i class="bi bi-circle-fill text-warning"></i> - Medio</div>`
+                break;
+            
+              case 'hard':
+                document.getElementById(`dificultad${indice}-${objetivo}`).innerHTML = `<div><i class="bi bi-circle-fill text-danger"></i> - Dificil</div>`
+                break;
+            
+              case 'rHard':
+                document.getElementById(`dificultad${indice}-${objetivo}`).innerHTML = `<div><i class="bi bi-emoji-dizzy-fill text-danger"></i> - Muy Dificil</div>`
+                break;
+
+              default:
+                document.getElementById(`dificultad${indice}-${objetivo}`).innerHTML = `<div><i class="bi bi-circle-fill text-info"></i> - Error</div>`
+                break;
+            }
+            // Que el campo de final y el de info se rellenen dinamicamente acorde a si esta entregada o no
+            if (objetivo == 0) {
+              document.getElementById(`final${indice}-${objetivo}`).innerHTML = `
+              <button type="button" class="btn btn-primary btn-sm" onclick="preguntarNota(${indice})"><i class="bi bi-check-lg"></i></button>
+              <button type="button" class="btn btn-danger btn-sm" onclick="modalBorrar(${objetivo}, ${indice})" data-bs-toggle="modal" data-bs-target="#modalUniversal""><i class="bi bi-trash3-fill"></i></button>
+              `
+            }
+            else if (objetivo == 1) {
+              document.getElementById(`final${indice}-${objetivo}`).innerHTML = `
+              <h5>${proyecto.nota}pts</h5>
+              <button type="button" class="btn btn-danger btn-sm" onclick="modalBorrar(${objetivo}, ${indice})" data-bs-toggle="modal" data-bs-target="#modalUniversal"><i class="bi bi-trash3-fill"></i></button>
+              `
+            }
+
+            if ((proyecto.descripcion).length != 0) {
+              document.getElementById(tablaObjetivo).innerHTML += `
+              <tr>
+                <td colspan="6" class="bg-tertiary-subtle">
+                  <div class="w-75 mx-auto"><p class="text-break">${proyecto.descripcion}</p></div>
+                </td>
+              </tr>
+              `
+            }
+          indice++
+          }
+        }
+      }
+
+      registroForm.addEventListener("submit", (e) => {
+        e.preventDefault()
+        let tituloProyecto = document.getElementById('titulo').value
+        let fechaProyecto = document.getElementById('fecha').value
+        let dificultadProyecto = document.getElementById('dificultad').value
+        let statusProyecto = document.getElementById('status').value
+        let descripcionProyecto = document.getElementById('descripcion').value
+        let iconoProyecto = document.querySelector('input[name="opcionesLogo"]:checked').value //Esta linea la investigue, y segun entiendo busca entre los radios enlazados con el mismo nombre cual esta checkeado para darme el valor de ese
+        //Aqui no incluyo a la nota, ya que si no esta llena no voy a darle espacio a un campo vacio
+
+        if (statusProyecto == 0) {
+          proyectosPendientes.push({
+            titulo: tituloProyecto,
+            fecha: fechaProyecto,
+            dificultad: dificultadProyecto,
+            status: statusProyecto,
+            icono: iconoProyecto,
+            descripcion: descripcionProyecto
+          })
+          refrescarTabla(0, proyectosPendientes) //El parametro le dice que tabla resfrescar
+          document.getElementById('zonaSuccess').innerHTML = `
+          <div class="text-center mb-1">¡Proyecto <b>Pendiente</b> agregado!</div>
+          <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-outline-info" data-bs-toggle="collapse" data-bs-target="#collapseTwo">¿Quieres ir a verlo?</button>   
+          </div>
+          `
+        }
+        else if (statusProyecto == 1) {
+          let notaProyecto = document.getElementById('nota').value
+          proyectosEntregados.push({
+            titulo: tituloProyecto,
+            fecha: fechaProyecto,
+            dificultad: dificultadProyecto,
+            status: statusProyecto,
+            nota: notaProyecto,
+            icono: iconoProyecto,
+            descripcion: descripcionProyecto
+          })
+          refrescarTabla(1, proyectosEntregados)
+          document.getElementById('zonaSuccess').innerHTML = `
+          <div class="text-center mb-1">¡Proyecto <b>Entregado</b> agregado!</div>
+          <div class="d-flex justify-content-center">
+          <button type="button" class="btn btn-outline-info" data-bs-toggle="collapse" data-bs-target="#collapseThree">¿Quieres ir a verlo?</button>
+          </div>
+          `
+        }
+        else alert('Algo Extranno Paso')
+        registroForm.reset()
+      })
+
+      refrescarTabla(0, proyectosPendientes)
+      refrescarTabla(1, proyectosEntregados)
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
